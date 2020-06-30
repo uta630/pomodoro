@@ -20,7 +20,7 @@ class Pomodoro extends Component {
   render() {
     return (
       <div className="c-setting">
-        <h3>pomodoro settings</h3>
+        <h3>settings</h3>
         <div>
           <label>
             稼働時間
