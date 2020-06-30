@@ -1,50 +1,43 @@
 import React, { Component } from "react";
+import { connect } from 'react-redux';
+import { Field, reduxForm } from 'redux-form'
+import { readTodos, addTodo, deleteTodo } from '../actions';
 
 class Todos extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      todos: [{ title: "todo 1" }, { title: "todo 2" }, { title: "todo 3" }],
-    };
-
-    this.addTodo = this.addTodo.bind(this);
     this.deleteTodo = this.deleteTodo.bind(this);
+    this.onSubmit = this.onSubmit.bind(this)
   }
 
-  addTodo(e) {
-    e.preventDefault();
+  componentDidMount() {
+    this.props.readTodos();
+  }
 
-    if (e.target.title.value === "") return;
-    e.target.title.value = "";
-
-    this.state.todos.push({ title: e.target.title.value });
-    this.setState({
-      todos: this.state.todos,
-    });
+  onSubmit(values){
+    this.props.addTodo(values)
   }
 
   deleteTodo(index) {
-    this.state.todos.splice(index, 1);
-    this.setState({
-      todos: this.state.todos,
-    });
+    this.props.deleteTodo(index)
   }
 
   render() {
+    const { handleSubmit, pristine, submitting, invalid } = this.props
+
     return (
       <div className="c-todos">
-        <form onSubmit={this.addTodo}>
-          <input type="text" name="title" />
-          <button type="submit" onSubmit={this.addTodo}>
+        <form onSubmit={handleSubmit(this.onSubmit)}>
+          <Field name="title" type="text" component="input" placeholder="todo is ..." />
+          <button type="submit" disabled={pristine || submitting || invalid}>
             +
           </button>
         </form>
         <ul>
-          {this.state.todos.map((item, index) => (
+          {this.props.todos.map((item, index) => (
             <p key={index}>
-              {item.title}
-              <i onClick={this.deleteTodo}>removed</i>
+              {item.title} | <i onClick={this.deleteTodo.bind(this,index)}>removed</i>
             </p>
           ))}
         </ul>
@@ -53,4 +46,17 @@ class Todos extends Component {
   }
 }
 
-export default Todos;
+const mapStateToProps = state => ({ todos: state.todos })
+const mapDispatchToProps = ({ readTodos, addTodo, deleteTodo })
+const validate = values => {
+  const errors = {}
+
+  if(!values.title) errors.title = "Enter a title, please."
+  if(!values.body) errors.body = "Enter a body, please."
+
+  return errors
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(
+  reduxForm({ validate, form: 'todosForm' })(Todos)
+)
