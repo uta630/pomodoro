@@ -1,44 +1,20 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { readPomodoro, updatePomodoro } from "../actions"
 
 class Pomodoro extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      pomodoro: 25,
-      short: 5,
-      long: 15,
-      delay: 4,
-    };
-
     this.onChangePomodoro = this.onChangePomodoro.bind(this);
-    this.onChangeShortRest = this.onChangeShortRest.bind(this);
-    this.onChangeLongRest = this.onChangeLongRest.bind(this);
-    this.onChangeDelay = this.onChangeDelay.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.readPomodoro()
   }
 
   onChangePomodoro(e) {
-    this.setState({
-      pomodoro: e.target.valueAsNumber,
-    });
-  }
-
-  onChangeShortRest(e) {
-    this.setState({
-      short: e.target.valueAsNumber,
-    });
-  }
-
-  onChangeLongRest(e) {
-    this.setState({
-      long: e.target.valueAsNumber,
-    });
-  }
-
-  onChangeDelay(e) {
-    this.setState({
-      delay: e.target.valueAsNumber,
-    });
+    this.props.updatePomodoro(e.target)
   }
 
   render() {
@@ -50,7 +26,8 @@ class Pomodoro extends Component {
             稼働時間
             <input
               type="number"
-              value={this.state.pomodoro}
+              name="pomodoro"
+              value={this.props.pomodoro.pomodoro}
               min={1}
               max={100}
               onChange={this.onChangePomodoro}
@@ -62,10 +39,11 @@ class Pomodoro extends Component {
             短い休憩
             <input
               type="number"
-              value={this.state.short}
+              name="short"
+              value={this.props.pomodoro.short}
               min={1}
               max={100}
-              onChange={this.onChangeShortRest}
+              onChange={this.onChangePomodoro}
             />
           </label>
         </div>
@@ -74,10 +52,11 @@ class Pomodoro extends Component {
             長い休憩
             <input
               type="number"
-              value={this.state.long}
+              name="long"
+              value={this.props.pomodoro.long}
               min={1}
               max={100}
-              onChange={this.onChangeLongRest}
+              onChange={this.onChangePomodoro}
             />
           </label>
         </div>
@@ -86,10 +65,11 @@ class Pomodoro extends Component {
             長い休憩までの回数
             <input
               type="number"
-              value={this.state.delay}
+              name="delay"
+              value={this.props.pomodoro.delay}
               min={1}
               max={100}
-              onChange={this.onChangeDelay}
+              onChange={this.onChangePomodoro}
             />
           </label>
         </div>
@@ -98,4 +78,7 @@ class Pomodoro extends Component {
   }
 }
 
-export default Pomodoro;
+const mapStateToProps = state => ({ pomodoro: state.pomodoro })
+const mapDispatchToProps = ({ readPomodoro, updatePomodoro })
+
+export default connect(mapStateToProps, mapDispatchToProps)(Pomodoro);
