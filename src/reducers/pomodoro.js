@@ -5,9 +5,9 @@ import {
 
 const initialState = {
     pomodoro: .1,
-    short: .2,
-    long: 15,
-    delay: 4,
+    short: .05,
+    long: .2,
+    delay: 3,
 }
 
 export default (pomodoro = initialState, action) => {

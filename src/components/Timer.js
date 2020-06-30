@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from 'react-redux'
-import { readTimer, startTimer, stopTimer, resetTimer, finishedTimer, readPomodoro } from "../actions"
+import { readTimer, counterTimer, stopTimer, resetTimer, finishedTimer, readPomodoro } from "../actions"
 
 class Timer extends Component {
   constructor(props) {
@@ -19,11 +19,14 @@ class Timer extends Component {
   start() {
     if (!this.props.timer.active) {
       this.countUp = setInterval(() => {
-        if(this.props.timer.counter === 0) {
+        if(this.props.timer.timer === 0) {
           this.props.finishedTimer()
-          this.props.resetTimer(this.assignTimer)
+          this.props.resetTimer(
+            this.props.timer.counter % this.props.pomodoro.delay === 0 && !this.props.timer.isWorking
+            ? this.props.pomodoro.long : this.assignTimer
+          )
         }
-        this.props.startTimer()
+        this.props.counterTimer()
       }, 1000);
     }
   }
@@ -39,7 +42,7 @@ class Timer extends Component {
   }
 
   timeFormatter() {
-    const counter = this.props.timer.counter;
+    const counter = this.props.timer.timer;
     const s = `0${counter % 60}`.slice(-2);
     const m = ("0" + parseInt((counter / 60) % 60)).slice(-2);
 
@@ -50,7 +53,9 @@ class Timer extends Component {
     this.assignTimer = this.props.timer.isWorking ? this.props.pomodoro.pomodoro : this.props.pomodoro.short
     return (
       <div className="c-timer">
-        <p>{this.props.timer.isWorking ? 'working': 'Break timer'}/{this.timeFormatter()}</p>
+        <p>{this.props.timer.isWorking ? 'working': 'Break timer'}</p>
+        <p>{this.timeFormatter()}</p>
+        <p>Done:{this.props.timer.counter}</p>
         <button onClick={this.start}>start</button>
         <button onClick={this.stop}>stop</button>
         <button onClick={this.reset}>reset</button>
@@ -60,6 +65,6 @@ class Timer extends Component {
 }
 
 const mapStateToProps = state => ({ timer: state.timer, pomodoro: state.pomodoro })
-const mapDispatchToProps = ({ readTimer, startTimer, stopTimer, resetTimer, finishedTimer, readPomodoro })
+const mapDispatchToProps = ({ readTimer, counterTimer, stopTimer, resetTimer, finishedTimer, readPomodoro })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Timer);
