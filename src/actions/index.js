@@ -19,3 +19,20 @@ export const readPomodoro = () => dispatch => {
 export const updatePomodoro = target => dispatch => {
     return dispatch({ type: UPDATE_POMODORO, target })
 }
+
+export const READ_TIMER = 'READ_TIMER'
+export const START_TIMER = 'START_TIMER'
+export const STOP_TIMER = 'STOP_TIMER'
+export const RESET_TIMER = 'RESET_TIMER'
+export const readTimer = () => dispatch => {
+    return dispatch({ type: READ_TIMER })
+}
+export const startTimer = () => dispatch => {
+    return dispatch({ type: START_TIMER })
+}
+export const stopTimer = () => dispatch => {
+    return dispatch({ type: STOP_TIMER })
+}
+export const resetTimer = () => dispatch => {
+    return dispatch({ type: RESET_TIMER })
+}

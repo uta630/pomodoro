@@ -1,53 +1,40 @@
 import React, { Component } from "react";
+import { connect } from 'react-redux'
+import { readTimer, startTimer, stopTimer, resetTimer } from "../actions"
 
 class Timer extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      counter: 0,
-      active: false,
-    };
+    this.start = this.start.bind(this);
+    this.stop = this.stop.bind(this);
+    this.reset = this.reset.bind(this);
+  }
 
-    this.start = this.start.bind(this)
-    this.stop = this.stop.bind(this)
-    this.reset = this.reset.bind(this)
+  componentDidMount() {
+    this.props.readTimer();
   }
 
   start() {
-    if (!this.state.active) {
-      this.setState({
-        ...this.state,
-        active: true,
-      });
-
+    if (!this.props.timer.active) {
       this.countUp = setInterval(() => {
-        this.setState({
-          ...this.state,
-          counter: this.state.counter + 1,
-        });
+        this.props.startTimer()
       }, 1000);
     }
   }
 
   stop() {
-    clearInterval(this.countUp);
-    this.setState({
-      ...this.state,
-      active: false,
-    });
+    clearInterval(this.countUp)
+    this.props.stopTimer()
   }
 
   reset() {
-    clearInterval(this.countUp);
-    this.setState({
-      counter: 0,
-      active: false,
-    });
+    clearInterval(this.countUp)
+    this.props.resetTimer()
   }
 
   timeFormatter() {
-    const counter = this.state.counter;
+    const counter = this.props.timer.counter;
     const s = `0${counter % 60}`.slice(-2);
     const m = ("0" + parseInt((counter / 60) % 60)).slice(-2);
 
@@ -66,4 +53,7 @@ class Timer extends Component {
   }
 }
 
-export default Timer;
+const mapStateToProps = state => ({ timer: state.timer })
+const mapDispatchToProps = ({ readTimer, startTimer, stopTimer, resetTimer })
+
+export default connect(mapStateToProps, mapDispatchToProps)(Timer);
