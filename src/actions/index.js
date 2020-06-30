@@ -24,8 +24,9 @@ export const READ_TIMER = 'READ_TIMER'
 export const START_TIMER = 'START_TIMER'
 export const STOP_TIMER = 'STOP_TIMER'
 export const RESET_TIMER = 'RESET_TIMER'
-export const readTimer = () => dispatch => {
-    return dispatch({ type: READ_TIMER })
+export const FINISHED_TIMER = 'FINISHED_TIMER'
+export const readTimer = time => dispatch => {
+    return dispatch({ type: READ_TIMER, time })
 }
 export const startTimer = () => dispatch => {
     return dispatch({ type: START_TIMER })
@@ -33,6 +34,9 @@ export const startTimer = () => dispatch => {
 export const stopTimer = () => dispatch => {
     return dispatch({ type: STOP_TIMER })
 }
-export const resetTimer = () => dispatch => {
-    return dispatch({ type: RESET_TIMER })
+export const resetTimer = time => dispatch => {
+    return dispatch({ type: RESET_TIMER, time })
+}
+export const finishedTimer = () => dispatch => {
+    return dispatch({ type: FINISHED_TIMER })
 }

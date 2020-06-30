@@ -4,8 +4,8 @@ import {
 } from '../actions'
 
 const initialState = {
-    pomodoro: 25,
-    short: 5,
+    pomodoro: .1,
+    short: .2,
     long: 15,
     delay: 4,
 }
