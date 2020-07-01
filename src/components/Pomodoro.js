@@ -31,6 +31,7 @@ class Pomodoro extends Component {
               min={1}
               max={100}
               onChange={this.onChangePomodoro}
+              disabled={this.props.timer.active}
             />
           </label>
         </div>
@@ -44,6 +45,7 @@ class Pomodoro extends Component {
               min={1}
               max={100}
               onChange={this.onChangePomodoro}
+              disabled={this.props.timer.active}
             />
           </label>
         </div>
@@ -57,6 +59,7 @@ class Pomodoro extends Component {
               min={1}
               max={100}
               onChange={this.onChangePomodoro}
+              disabled={this.props.timer.active}
             />
           </label>
         </div>
@@ -70,6 +73,7 @@ class Pomodoro extends Component {
               min={1}
               max={100}
               onChange={this.onChangePomodoro}
+              disabled={this.props.timer.active}
             />
           </label>
         </div>
@@ -78,7 +82,7 @@ class Pomodoro extends Component {
   }
 }
 
-const mapStateToProps = state => ({ pomodoro: state.pomodoro })
+const mapStateToProps = state => ({ timer: state.timer, pomodoro: state.pomodoro })
 const mapDispatchToProps = ({ readPomodoro, updatePomodoro })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Pomodoro);

@@ -13,21 +13,22 @@ class Timer extends Component {
 
   componentDidMount() {
     this.props.readPomodoro();
-    this.props.readTimer(this.assignTimer);
+    this.props.readTimer(this.assignTime());
   }
 
   start() {
     if (!this.props.timer.active) {
       this.countUp = setInterval(() => {
-        if(this.props.timer.timer === 0) {
-          this.props.finishedTimer()
-          this.props.resetTimer(
-            this.props.timer.counter % this.props.pomodoro.delay === 0 && !this.props.timer.isWorking
-            ? this.props.pomodoro.long : this.assignTimer
-          )
-        }
+        this.ifFinished()
         this.props.counterTimer()
       }, 1000);
+    }
+  }
+
+  ifFinished() {
+    if(this.props.timer.timer === 0) {
+      this.props.finishedTimer()
+      this.props.resetTimer(this.assignTime())
     }
   }
 
@@ -38,7 +39,7 @@ class Timer extends Component {
 
   reset() {
     clearInterval(this.countUp)
-    this.props.resetTimer(this.assignTimer)
+    this.props.resetTimer(this.assignTime())
   }
 
   timeFormatter() {
@@ -49,11 +50,20 @@ class Timer extends Component {
     return `${m}:${s}`;
   }
 
+  assignTime() {
+    if(this.props.timer.counter % this.props.pomodoro.delay === 0 && !this.props.timer.isWorking) {
+      return this.props.pomodoro.long
+    } else if(this.props.timer.isWorking) {
+      return this.props.pomodoro.pomodoro
+    } else {
+      return this.props.pomodoro.short
+    }
+  }
+
   render() {
-    this.assignTimer = this.props.timer.isWorking ? this.props.pomodoro.pomodoro : this.props.pomodoro.short
     return (
       <div className="c-timer">
-        <p>{this.props.timer.isWorking ? 'working': 'Break timer'}</p>
+        <p>{this.props.timer.isWorking ? 'working': 'Break time'}</p>
         <p>{this.timeFormatter()}</p>
         <p>Done:{this.props.timer.counter}</p>
         <button onClick={this.start}>start</button>
