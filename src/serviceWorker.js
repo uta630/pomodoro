@@ -10,18 +10,6 @@
 // To learn more about the benefits of this model and instructions on how to
 // opt-in, read https://bit.ly/CRA-PWA
 
-const webpush = require('web-push');
-const applicationServerPublicKey = webpush.generateVAPIDKeys().publicKey;
-const RegisterAPI = '/sw/register'
-function urlB64ToUint8Array(base64String) {
-  const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
-  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/')
-  const rawData = window.atob(base64)
-  return new Uint8Array(rawData.length).map((v, i) => {
-    return rawData.charCodeAt(i)
-  })
-}
-
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||
     // [::1] is the IPv6 localhost address.
@@ -70,27 +58,6 @@ function registerValidSW(swUrl, config) {
   navigator.serviceWorker
     .register(swUrl)
     .then(registration => {
-      // Register subscription
-      registration.pushManager
-        .subscribe({
-          userVisibleOnly: true,
-          applicationServerKey: urlB64ToUint8Array(applicationServerPublicKey),
-        })
-        .then(subscription => {
-          console.log('Subscribe OK:', subscription)
-          // send serviceworker information to push service
-          return fetch(RegisterAPI, {
-            method: 'POST',
-            body: JSON.stringify(subscription.toJSON()),
-          })
-        })
-        .then(() => {
-          console.log('Server Stored Subscription.')
-        })
-        .catch(err => {
-          console.log('Subscribe Error:', err)
-          console.error(err)
-        })
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
         if (installingWorker == null) {
